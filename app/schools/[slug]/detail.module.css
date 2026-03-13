@@ -1,0 +1,136 @@
+.detailContainer {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+}
+
+.descriptionSection {
+    background: linear-gradient(135deg, var(--primary-50), rgba(255, 255, 255, 0.8));
+    border-left: 4px solid var(--primary-500);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: var(--space-8);
+}
+
+.mainInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.detailCard {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--gray-200);
+    padding: var(--space-6);
+}
+
+.schoolTitle {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: var(--space-4);
+}
+
+.badges {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.sidebarCard {
+    height: fit-content;
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-4));
+}
+
+.mapContainer {
+    height: 280px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--space-5);
+    border: 1px solid var(--gray-200);
+}
+
+.contactList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.contactItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    word-break: break-all;
+}
+
+.contactItem svg {
+    flex-shrink: 0;
+    color: var(--primary-500);
+}
+
+.contactItem a {
+    color: var(--primary-600);
+    text-decoration: none;
+}
+
+.contactItem a:hover {
+    text-decoration: underline;
+}
+
+.nearbySection {
+    margin-top: var(--space-8);
+}
+
+.nearbyGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+}
+
+.updatedAt {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin-top: var(--space-4);
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--primary-600);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-4);
+    transition: gap var(--transition-fast);
+}
+
+.backLink:hover {
+    gap: var(--space-3);
+}
+
+@media (max-width: 1024px) {
+    .detailGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .nearbyGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .nearbyGrid {
+        grid-template-columns: 1fr;
+    }
+}

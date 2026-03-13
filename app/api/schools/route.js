@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+const { getAllSchools, createSchool, searchSchools } = require("@/lib/queries");
+
+export async function GET(request) {
+    const { searchParams } = new URL(request.url);
+
+    const params = {
+        page: parseInt(searchParams.get("page") || "1"),
+        limit: parseInt(searchParams.get("limit") || "12"),
+        sort: searchParams.get("sort") || "name_asc",
+        search: searchParams.get("search") || "",
+        taluk: searchParams.get("taluk") || "",
+        village: searchParams.get("village") || "",
+        school_type: searchParams.get("school_type") || "",
+        board: searchParams.get("board") || "",
+        classes: searchParams.get("classes") || "",
+    };
+
+    try {
+        const result = getAllSchools(params);
+        return NextResponse.json(result);
+    } catch (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
+
+export async function POST(request) {
+    try {
+        const data = await request.json();
+
+        if (!data.school_name || !data.school_type || !data.board || !data.taluk) {
+            return NextResponse.json(
+                { error: "School name, type, board, and taluk are required" },
+                { status: 400 }
+            );
+        }
+
+        const result = createSchool({
+            ...data,
+            approved: 0,
+            featured: 0,
+        });
+
+        return NextResponse.json({ success: true, id: result.lastInsertRowid }, { status: 201 });
+    } catch (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

@@ -1,0 +1,106 @@
+.pageWrapper {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-8);
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+}
+
+.sidebar {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--gray-200);
+    padding: var(--space-6);
+    height: fit-content;
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-4));
+}
+
+.sidebarTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: var(--space-6);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.mainContent {
+    min-width: 0;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.resultCount {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.resultCount strong {
+    color: var(--text-primary);
+}
+
+.sortSelect {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.schoolGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.mobileFilterBtn {
+    display: none;
+    margin-bottom: var(--space-4);
+}
+
+@media (max-width: 1024px) {
+    .schoolGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .pageWrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+        border-radius: 0;
+        overflow-y: auto;
+    }
+
+    .sidebar.open {
+        display: block;
+    }
+
+    .mobileFilterBtn {
+        display: flex;
+    }
+
+    .schoolGrid {
+        grid-template-columns: 1fr;
+    }
+}
