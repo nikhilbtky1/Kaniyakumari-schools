@@ -42,6 +42,7 @@ next-env.d.ts
 
 # database
 *.db
+!data/schools.db
 *.db-journal
 *.db-wal
 *.db-shm
