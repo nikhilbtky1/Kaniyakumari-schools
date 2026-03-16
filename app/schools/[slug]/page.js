@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, MapPin, Phone, Mail, Globe, BookOpen, Calendar, Building2 } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, Mail, Globe, BookOpen, Calendar, Building2, Star } from "lucide-react";
 import { getSchoolBySlug, getNearbySchools } from "@/lib/queries";
 import SchoolCard from "@/components/SchoolCard";
 import styles from "./detail.module.css";
@@ -52,7 +52,7 @@ function getBoardBadgeClass(b) {
 
 export default async function SchoolDetailPage({ params }) {
     const { slug } = await params;
-    const school = getSchoolBySlug(slug);
+    const school = await getSchoolBySlug(slug);
 
     if (!school) {
         return (
@@ -65,7 +65,7 @@ export default async function SchoolDetailPage({ params }) {
     }
 
     const nearby = school.latitude && school.longitude
-        ? getNearbySchools(school.latitude, school.longitude, school.id, 4)
+        ? await getNearbySchools(school.latitude, school.longitude, school.id, 4)
         : [];
 
     // JSON-LD Schema.org structured data for Google rich results

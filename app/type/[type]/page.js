@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
 export default async function TypePage({ params }) {
     const { type } = await params;
     const typeName = decodeURIComponent(type);
-    const schools = getSchoolsByType(typeName);
+    const schools = await getSchoolsByType(typeName);
     const info = typeInfo[typeName] || { desc: `${typeName} schools in Kanyakumari District.`, emoji: "🏫", color: "" };
 
     return (

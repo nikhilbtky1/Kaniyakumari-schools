@@ -6,10 +6,10 @@ import styles from "./home.module.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://kanyakumarischools.in";
 
-export default function HomePage() {
-  const featured = getFeaturedSchools(8);
-  const recent = getRecentSchools(4);
-  const stats = getStats();
+export default async function HomePage() {
+  const featured = await getFeaturedSchools(8);
+  const recent = await getRecentSchools(4);
+  const stats = await getStats();
 
   const taluks = ["Agastheeswaram", "Kalkulam", "Killiyoor", "Thiruvattar", "Thovalai", "Vilavancode"];
   const types = [
@@ -85,10 +85,8 @@ export default function HomePage() {
                 name="search" // Keep name for form submission
                 placeholder="Search by school name, village, or taluk..."
                 autoComplete="off"
-                className={styles.heroSearchInput} // Added class
-                value={search} // Controlled component
-                onChange={(e) => setSearch(e.target.value)} // Controlled component
-                aria-label="Search schools by name, village, or taluk" // Added aria-label
+                className={styles.heroSearchInput}
+                aria-label="Search schools by name, village, or taluk"
               />
             </form>
           </div>

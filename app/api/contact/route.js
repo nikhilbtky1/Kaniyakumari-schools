@@ -19,7 +19,7 @@ export async function POST(request) {
             );
         }
 
-        createContact(data);
+        await createContact(data);
         return NextResponse.json({ success: true }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });

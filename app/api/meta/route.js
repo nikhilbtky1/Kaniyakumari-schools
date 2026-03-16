@@ -15,7 +15,7 @@ export async function GET(request) {
     }
 
     try {
-        const values = getDistinctValues(column);
+        const values = await getDistinctValues(column);
         // Filter out null or empty values
         const filteredValues = values.filter(v => v && v.trim() !== "");
         return NextResponse.json(filteredValues);

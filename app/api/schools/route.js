@@ -17,7 +17,7 @@ export async function GET(request) {
     };
 
     try {
-        const result = getAllSchools(params);
+        const result = await getAllSchools(params);
         return NextResponse.json(result);
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
@@ -42,13 +42,13 @@ export async function POST(request) {
             );
         }
 
-        const result = createSchool({
+        const result = await createSchool({
             ...data,
             approved: 0,
             featured: 0,
         });
 
-        return NextResponse.json({ success: true, id: result.lastInsertRowid }, { status: 201 });
+        return NextResponse.json({ success: true, id: Number(result.lastInsertRowid) }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

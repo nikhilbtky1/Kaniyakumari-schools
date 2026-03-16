@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
 export default async function TalukDetailPage({ params }) {
     const { taluk } = await params;
     const talukName = decodeURIComponent(taluk);
-    const schools = getSchoolsByTaluk(talukName);
+    const schools = await getSchoolsByTaluk(talukName);
     const info = talukInfo[talukName] || { desc: `Schools in ${talukName} taluk of Kanyakumari District.`, emoji: "📍" };
 
     return (

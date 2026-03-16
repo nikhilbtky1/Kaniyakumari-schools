@@ -45,7 +45,7 @@ export async function generateMetadata({ params }) {
 export default async function BoardDetailPage({ params }) {
     const { board } = await params;
     const boardName = decodeURIComponent(board);
-    const schools = getSchoolsByBoard(boardName);
+    const schools = await getSchoolsByBoard(boardName);
     const info = boardDetails[boardName] || {
         fullName: boardName,
         emoji: "📚",
