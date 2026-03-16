@@ -35,6 +35,13 @@ export async function POST(request) {
             );
         }
 
+        if (process.env.NODE_ENV === "production") {
+            return NextResponse.json(
+                { success: false, error: "Adding schools is disabled in the demo version. Please check back later!" },
+                { status: 403 }
+            );
+        }
+
         const result = createSchool({
             ...data,
             approved: 0,

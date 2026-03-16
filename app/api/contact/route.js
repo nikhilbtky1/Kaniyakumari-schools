@@ -12,6 +12,13 @@ export async function POST(request) {
             );
         }
 
+        if (process.env.NODE_ENV === "production") {
+            return NextResponse.json(
+                { success: false, error: "Submissions are disabled in the demo version. Please check back later!" },
+                { status: 403 }
+            );
+        }
+
         createContact(data);
         return NextResponse.json({ success: true }, { status: 201 });
     } catch (error) {

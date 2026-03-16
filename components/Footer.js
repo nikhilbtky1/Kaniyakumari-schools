@@ -8,7 +8,7 @@ export default function Footer() {
             <div className={styles.footerInner}>
                 <div className={styles.footerGrid}>
                     <div className={styles.footerBrand}>
-                        <h3>🎓 Kanyakumari School Directory</h3>
+                        <h2>🎓 Kanyakumari School Directory</h2>
                         <p>
                             Helping parents and students find the right school in Kanyakumari District, Tamil Nadu.
                             Explore government, private, and aided schools across all taluks.
@@ -16,7 +16,7 @@ export default function Footer() {
                     </div>
 
                     <div className={styles.footerSection}>
-                        <h4>Quick Links</h4>
+                        <h3>Quick Links</h3>
                         <Link href="/schools" className={styles.footerLink}>All Schools</Link>
                         <Link href="/map" className={styles.footerLink}>Map View</Link>
                         <Link href="/add-school" className={styles.footerLink}>Add School</Link>
@@ -25,7 +25,7 @@ export default function Footer() {
                     </div>
 
                     <div className={styles.footerSection}>
-                        <h4>By Taluk</h4>
+                        <h3>By Taluk</h3>
                         <Link href="/taluk/Agastheeswaram" className={styles.footerLink}>Agastheeswaram</Link>
                         <Link href="/taluk/Kalkulam" className={styles.footerLink}>Kalkulam</Link>
                         <Link href="/taluk/Killiyoor" className={styles.footerLink}>Killiyoor</Link>
@@ -35,7 +35,7 @@ export default function Footer() {
                     </div>
 
                     <div className={styles.footerSection}>
-                        <h4>By Curriculum</h4>
+                        <h3>By Curriculum</h3>
                         <Link href="/curriculum/CBSE" className={styles.footerLink}>CBSE</Link>
                         <Link href="/curriculum/ICSE" className={styles.footerLink}>ICSE</Link>
                         <Link href="/curriculum/State Board" className={styles.footerLink}>State Board</Link>

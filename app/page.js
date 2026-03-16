@@ -71,21 +71,24 @@ export default function HomePage() {
         <div className={styles.heroContent}>
           <div className={styles.heroEmoji}>🎓</div>
           <h1 className={styles.heroTitle}>
-            Find the Best Schools in{" "}
-            <span className={styles.heroHighlight}>Kanyakumari District</span>
+            Find the Best <span>Schools</span> in Kanyakumari
           </h1>
           <p className={styles.heroSubtitle}>
-            Explore {stats.total}+ Government & Aided schools across all 6 taluks of Kanyakumari District.
-            Find the right school for your child.
+            Explore {stats.total}+ Government and Aided schools across the district.
+            Verified data, contact details, and locations at your fingertips.
           </p>
           <div className={styles.heroSearch}>
             <Search className={styles.searchIcon} size={20} />
             <form action="/schools" method="GET">
               <input
                 type="text"
-                name="search"
+                name="search" // Keep name for form submission
                 placeholder="Search by school name, village, or taluk..."
                 autoComplete="off"
+                className={styles.heroSearchInput} // Added class
+                value={search} // Controlled component
+                onChange={(e) => setSearch(e.target.value)} // Controlled component
+                aria-label="Search schools by name, village, or taluk" // Added aria-label
               />
             </form>
           </div>
