@@ -1,12 +1,13 @@
-const Database = require("better-sqlite3");
+const { createClient } = require("@libsql/client");
 const path = require("path");
 const fs = require("fs");
 
 const DB_PATH = path.join(__dirname, "..", "data", "schools.db");
 const EXTERNAL_DATA_DIR = path.join(__dirname, "..", "data", "external");
 
-const db = new Database(DB_PATH);
-db.pragma("journal_mode = WAL");
+const client = createClient({
+    url: `file:${DB_PATH}`,
+});
 
 const BLOCK_TO_TALUK = {
     'Agastiswaram': 'Agastheeswaram',
@@ -55,7 +56,7 @@ function normalizeTaluk(val) {
     return 'Agastheeswaram'; // Default
 }
 
-function syncFile(filename, board, schoolType = 'Private') {
+async function syncFile(filename, board, schoolType = 'Private') {
     const filePath = path.join(EXTERNAL_DATA_DIR, filename);
     if (!fs.existsSync(filePath)) {
         console.log(`File not found: ${filename}`);
@@ -65,63 +66,66 @@ function syncFile(filename, board, schoolType = 'Private') {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     console.log(`Syncing ${data.length} schools from ${filename} (${board})...`);
 
-    const insert = db.prepare(`
-        INSERT INTO schools (
-            school_name, slug, school_type, board, address, 
-            taluk, phone, website, approved, featured
-        ) VALUES (
-            @name, @slug, @type, @board, @address, 
-            @taluk, @phone, @website, 1, 0
-        )
-    `);
-
-    const check = db.prepare(`SELECT id FROM schools WHERE school_name = ? AND board = ?`);
-
     let added = 0;
     let skipped = 0;
 
-    const transaction = db.transaction((schools) => {
-        for (const school of schools) {
-            const name = school.name || school.Name || school.school_name;
-            const existing = check.get(name, board);
-            
-            if (existing) {
-                skipped++;
-                continue;
-            }
+    for (const school of data) {
+        const name = school.name || school.Name || school.school_name;
+        
+        const checkRes = await client.execute({
+            sql: `SELECT id FROM schools WHERE school_name = ? AND board = ?`,
+            args: [name, board]
+        });
 
-            const talukRaw = school.taluk || school.taluk_block || school['Taluk/Block'] || '';
-            const taluk = normalizeTaluk(talukRaw);
-            
-            let type = schoolType;
-            if (name.toLowerCase().includes('government') || name.toLowerCase().includes('panchayat')) {
-                type = 'Government';
-            } else if (name.toLowerCase().includes('kendriya vidyalaya')) {
-                type = 'Central';
-            }
-
-            insert.run({
-                name: name,
-                slug: generateSlug(name),
-                type: type,
-                board: board,
-                address: school.address || school.Address || '',
-                taluk: taluk,
-                phone: school.phone || school.Phone || '',
-                website: school.website || school.Website || ''
-            });
-            added++;
+        if (checkRes.rows.length > 0) {
+            skipped++;
+            continue;
         }
-    });
 
-    transaction(data);
+        const talukRaw = school.taluk || school.taluk_block || school['Taluk/Block'] || '';
+        const taluk = normalizeTaluk(talukRaw);
+        
+        let type = schoolType;
+        if (name.toLowerCase().includes('government') || name.toLowerCase().includes('panchayat')) {
+            type = 'Government';
+        } else if (name.toLowerCase().includes('kendriya vidyalaya')) {
+            type = 'Central';
+        }
+
+        await client.execute({
+            sql: `INSERT INTO schools (
+                school_name, slug, school_type, board, address, 
+                taluk, phone, website, approved, featured
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 0)`,
+            args: [
+                name,
+                generateSlug(name),
+                type,
+                board,
+                school.address || school.Address || '',
+                taluk,
+                school.phone || school.Phone || '',
+                school.website || school.Website || ''
+            ]
+        });
+        added++;
+    }
+
     console.log(`Finished ${filename}: Added ${added}, Skipped ${skipped} duplicates.`);
 }
 
-console.log("Starting school synchronization...");
-syncFile('cbse_schools.json', 'CBSE');
-syncFile('icse_schools.json', 'ICSE');
-syncFile('pre_primary_schools.json', 'Pre-Primary');
+async function run() {
+    console.log("Starting school synchronization...");
+    try {
+        await syncFile('cbse_schools.json', 'CBSE');
+        await syncFile('icse_schools.json', 'ICSE');
+        await syncFile('pre_primary_schools.json', 'Pre-Primary');
+        console.log("Sync complete!");
+    } catch (err) {
+        console.error("Sync failed:", err);
+    } finally {
+        client.close();
+    }
+}
 
-console.log("Sync complete!");
-db.close();
+run();
