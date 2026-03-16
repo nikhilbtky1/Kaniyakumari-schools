@@ -9,7 +9,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://kanyakumarischools
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
-    const school = getSchoolBySlug(slug);
+    const school = await getSchoolBySlug(slug);
     if (!school) return { title: "School Not Found" };
 
     const title = `${school.school_name} – ${school.school_type} ${school.board} School in ${school.village}, ${school.taluk}`;
