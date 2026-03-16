@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Bethlahem Hillside International School",
+    "address": "Nadutheri Karungal, Kanyakumari - 629157",
+    "taluk_block": "Karungal",
+    "phone": "+91-4651293882",
+    "website": null
+  },
+  {
+    "name": "Comorin International School",
+    "address": "Aralvaimozhi, Nagercoil - 629301",
+    "taluk_block": "Aralvaimozhi",
+    "phone": "+91-4652-290844",
+    "website": null
+  },
+  {
+    "name": "Corpus Christi School",
+    "address": "Peruvillai P.O., Kanyakumari - 629003",
+    "taluk_block": "Peruvillai",
+    "phone": "+91-9486070061, +91-9486045571",
+    "website": null
+  },
+  {
+    "name": "Dr. Abdul Kalam International School and Research Academy",
+    "address": "Peria Vilai Vatta Kottai Road, Kottaram - 629703",
+    "taluk_block": "Kottaram",
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Excel Central School",
+    "address": "17/190 A, Awai Farm Lane Thiruvattar, Kanyakumari - 629177",
+    "taluk_block": "Thiruvattar",
+    "phone": "+91-7598168394",
+    "website": null
+  },
+  {
+    "name": "Kanyakumari Public School",
+    "address": "Karuniapuram - 629702",
+    "taluk_block": "Karuniapuram",
+    "phone": "+91-4652-270287, +91-9791788851",
+    "website": null
+  },
+  {
+    "name": "S. B. J. Vidya Bhavan",
+    "address": "Peace Garden Kulasekharam, Kanyakumari - 629161",
+    "taluk_block": "Kulasekharam",
+    "phone": "+91-4651-277331, +91-4651-280912",
+    "website": null
+  },
+  {
+    "name": "Sacred Heart International School",
+    "address": "Pammam Marthandam, Marthandam - 629165",
+    "taluk_block": "Marthandam",
+    "phone": "+91-4651-205370, +91-7375707775",
+    "website": null
+  },
+  {
+    "name": "Seventh Day Adventist English High School",
+    "address": "Thiruvattar Post, Pulierranghy - 629177",
+    "taluk_block": "Pulierranghy",
+    "phone": "+91-4651-277470",
+    "website": null
+  },
+  {
+    "name": "Vinmeen School",
+    "address": "Nanjil Nager Kanyakulam, Nagercoil - 629003",
+    "taluk_block": "Nagercoil",
+    "phone": null,
+    "website": null
+  }
+]

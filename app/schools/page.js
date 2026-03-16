@@ -7,8 +7,8 @@ import SchoolCard from "@/components/SchoolCard";
 import styles from "./schools.module.css";
 
 const TALUKS = ["Agastheeswaram", "Kalkulam", "Killiyoor", "Thiruvattar", "Thovalai", "Vilavancode"];
-const TYPES = ["Government", "Aided"];
-const BOARDS = ["CBSE", "ICSE", "State Board", "Matriculation"];
+const TYPES = ["Government", "Aided", "Private", "Central"];
+const BOARDS = ["CBSE", "ICSE", "State Board", "Matriculation", "Pre-Primary"];
 const SORTS = [
     { value: "name_asc", label: "Name (A-Z)" },
     { value: "name_desc", label: "Name (Z-A)" },
@@ -33,17 +33,27 @@ function SchoolsContent() {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [villages, setVillages] = useState([]);
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const currentSort = searchParams.get("sort") || "name_asc";
     const currentSearch = searchParams.get("search") || "";
     const currentTaluk = searchParams.get("taluk") || "";
+    const currentVillage = searchParams.get("village") || "";
     const currentType = searchParams.get("school_type") || "";
     const currentBoard = searchParams.get("board") || "";
+    const currentClasses = searchParams.get("classes") || "";
 
     useEffect(() => {
         fetchSchools();
     }, [searchParams]);
+
+    useEffect(() => {
+        fetch("/api/meta?column=village")
+            .then(res => res.json())
+            .then(data => setVillages(Array.isArray(data) ? data : []))
+            .catch(err => console.error("Error fetching villages:", err));
+    }, []);
 
     async function fetchSchools() {
         setLoading(true);
@@ -52,8 +62,10 @@ function SchoolsContent() {
             sort: currentSort,
             search: currentSearch,
             taluk: currentTaluk,
+            village: currentVillage,
             school_type: currentType,
             board: currentBoard,
+            classes: currentClasses,
         });
 
         try {
@@ -85,6 +97,29 @@ function SchoolsContent() {
         router.push(`/schools?${params.toString()}`);
     }
 
+    // Windowed pagination logic
+    const getPaginationRange = () => {
+        const delta = 2;
+        const range = [];
+        for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+            range.push(i);
+        }
+
+        if (currentPage - delta > 2) {
+            range.unshift("...");
+        }
+        range.unshift(1);
+
+        if (currentPage + delta < totalPages - 1) {
+            range.push("...");
+        }
+        if (totalPages > 1) {
+            range.push(totalPages);
+        }
+
+        return range;
+    };
+
     return (
         <>
             <div className="page-header">
@@ -95,7 +130,7 @@ function SchoolsContent() {
                         <span className="current">All Schools</span>
                     </div>
                     <h1>All Schools in Kanyakumari District</h1>
-                    <p>Browse and filter {total} schools across 4 taluks</p>
+                    <p>Browse and filter {total} schools across Kanyakumari</p>
                 </div>
             </div>
 
@@ -120,7 +155,7 @@ function SchoolsContent() {
                         <input
                             type="text"
                             className="form-input"
-                            placeholder="Search schools..."
+                            placeholder="Search names, villages..."
                             value={currentSearch}
                             onChange={(e) => updateFilter("search", e.target.value)}
                         />
@@ -129,76 +164,87 @@ function SchoolsContent() {
                     {/* Taluk Filter */}
                     <div className="filter-section">
                         <h4>Taluk</h4>
-                        <label className="filter-option">
-                            <input
-                                type="radio"
-                                name="taluk"
-                                checked={currentTaluk === ""}
-                                onChange={() => updateFilter("taluk", "")}
-                            />
-                            All Taluks
-                        </label>
-                        {TALUKS.map((t) => (
-                            <label key={t} className="filter-option">
-                                <input
-                                    type="radio"
-                                    name="taluk"
-                                    checked={currentTaluk === t}
-                                    onChange={() => updateFilter("taluk", t)}
-                                />
-                                {t}
-                            </label>
-                        ))}
+                        <select 
+                            className="form-select" 
+                            value={currentTaluk} 
+                            onChange={(e) => updateFilter("taluk", e.target.value)}
+                        >
+                            <option value="">All Taluks</option>
+                            {TALUKS.map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                    </div>
+
+                    {/* Village Filter */}
+                    <div className="filter-section">
+                        <h4>Village</h4>
+                        <select 
+                            className="form-select" 
+                            value={currentVillage} 
+                            onChange={(e) => updateFilter("village", e.target.value)}
+                        >
+                            <option value="">All Villages</option>
+                            {villages.map(v => <option key={v} value={v}>{v}</option>)}
+                        </select>
                     </div>
 
                     {/* School Type Filter */}
                     <div className="filter-section">
                         <h4>School Type</h4>
-                        <label className="filter-option">
-                            <input
-                                type="radio"
-                                name="type"
-                                checked={currentType === ""}
-                                onChange={() => updateFilter("school_type", "")}
-                            />
-                            All Types
-                        </label>
-                        {TYPES.map((t) => (
-                            <label key={t} className="filter-option">
-                                <input
-                                    type="radio"
-                                    name="type"
-                                    checked={currentType === t}
-                                    onChange={() => updateFilter("school_type", t)}
-                                />
-                                {t}
-                            </label>
-                        ))}
+                        <div className="filter-options-grid">
+                            {["", ...TYPES].map((t) => (
+                                <label key={t || "all"} className="filter-option">
+                                    <input
+                                        type="radio"
+                                        name="type"
+                                        checked={currentType === t}
+                                        onChange={() => updateFilter("school_type", t)}
+                                    />
+                                    {t || "All Types"}
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Board Filter */}
                     <div className="filter-section">
-                        <h4>Board / Curriculum</h4>
-                        <label className="filter-option">
-                            <input
-                                type="radio"
-                                name="board"
-                                checked={currentBoard === ""}
-                                onChange={() => updateFilter("board", "")}
-                            />
-                            All Boards
-                        </label>
-                        {BOARDS.map((b) => (
-                            <label key={b} className="filter-option">
-                                <input
-                                    type="radio"
-                                    name="board"
-                                    checked={currentBoard === b}
-                                    onChange={() => updateFilter("board", b)}
-                                />
-                                {b}
-                            </label>
-                        ))}
+                        <h4>Curriculum</h4>
+                        <div className="filter-options-grid">
+                            {["", ...BOARDS].map((b) => (
+                                <label key={b || "all"} className="filter-option">
+                                    <input
+                                        type="radio"
+                                        name="board"
+                                        checked={currentBoard === b}
+                                        onChange={() => updateFilter("board", b)}
+                                    />
+                                    {b || "All Boards"}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Level Filter */}
+                    <div className="filter-section">
+                        <h4>Class Level</h4>
+                        <div className="filter-options-grid">
+                            {[
+                                { label: "All Levels", value: "" },
+                                { label: "Primary (I-V)", value: "V" },
+                                { label: "Middle (VI-VIII)", value: "VIII" },
+                                { label: "High (IX-X)", value: "X" },
+                                { label: "Higher Secondary", value: "XII" },
+                            ].map((l) => (
+                                <label key={l.label} className="filter-option">
+                                    <input
+                                        type="radio"
+                                        name="level"
+                                        checked={currentClasses === l.value}
+                                        onChange={() => updateFilter("classes", l.value)}
+                                    />
+                                    {l.label}
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Clear All */}
@@ -207,7 +253,7 @@ function SchoolsContent() {
                         style={{ width: "100%", marginTop: "var(--space-4)" }}
                         onClick={() => router.push("/schools")}
                     >
-                        Clear All Filters
+                        Reset All Filters
                     </button>
                 </aside>
 
@@ -229,12 +275,12 @@ function SchoolsContent() {
                     </div>
 
                     {loading ? (
-                        <div className="spinner" />
+                        <div style={{ padding: "4rem", textAlign: "center" }}><div className="spinner" /></div>
                     ) : schools.length === 0 ? (
                         <div className="empty-state">
                             <Search size={48} />
                             <h3>No schools found</h3>
-                            <p>Try adjusting your filters or search terms</p>
+                            <p>Try adjusting your search or filters to find what you're looking for</p>
                         </div>
                     ) : (
                         <div className={styles.schoolGrid}>
@@ -246,29 +292,35 @@ function SchoolsContent() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="pagination">
+                        <div className="pagination" style={{ marginTop: "var(--space-10)" }}>
                             <button
                                 className="pagination-btn"
                                 disabled={currentPage <= 1}
                                 onClick={() => goToPage(currentPage - 1)}
                             >
-                                ← Prev
+                                ←
                             </button>
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                                <button
-                                    key={p}
-                                    className={`pagination-btn ${p === currentPage ? "active" : ""}`}
-                                    onClick={() => goToPage(p)}
-                                >
-                                    {p}
-                                </button>
+                            
+                            {getPaginationRange().map((p, idx) => (
+                                p === "..." ? (
+                                    <span key={`dots-${idx}`} className="pagination-dots">...</span>
+                                ) : (
+                                    <button
+                                        key={p}
+                                        className={`pagination-btn ${p === currentPage ? "active" : ""}`}
+                                        onClick={() => goToPage(p)}
+                                    >
+                                        {p}
+                                    </button>
+                                )
                             ))}
+
                             <button
                                 className="pagination-btn"
                                 disabled={currentPage >= totalPages}
                                 onClick={() => goToPage(currentPage + 1)}
                             >
-                                Next →
+                                →
                             </button>
                         </div>
                     )}

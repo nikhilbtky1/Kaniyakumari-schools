@@ -1076,3 +1076,18 @@ main {
   gap: var(--space-4);
   margin-bottom: var(--space-6);
 }
+
+/* New Filter & Pagination Styles */
+.filter-options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.pagination-dots {
+  color: var(--text-tertiary);
+  padding: 0 var(--space-2);
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
